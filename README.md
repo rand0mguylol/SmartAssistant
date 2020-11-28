@@ -1,9 +1,9 @@
 I have created a [playlist for this project.](https://www.youtube.com/watch?v=ncER2nHWTko&list=PLlnBGPe6GFdMxJwR8YXo_GfE1LtnTZfbk)
 
-![Smart Assistant](./pictures/SmartAssistant.png)
+![Smart Assistant](./Pictures/SmartAssistant.png)
 
 This is a basic overview of the Smart Assistant project:
-![Plan](./pictures/Plan.png)
+![Plan](./Pictures/Plan.png)
 # Smart Assistant
 
 This is a fully functional smart assistant that is able to control your house and automate them. There are lots of features included in it.
