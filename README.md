@@ -20,16 +20,13 @@ This is a fully functional smart assistant that is able to control your house an
 
 ## Usage
 
-This project uses Unity (specifically the Universal Render Pipeline) as the GUI and Python as the API for the modules that users build. This project is tested on Windows 10 and is highly recommended to run in Windows OS although it is portable to Linux or Mac OS as Unity and Pythons are both multi-platform portable.
+This project uses Unity (specifically the Universal Render Pipeline) as the GUI and Python as the API for the modules that users build. This project is tested on Windows 10 and is highly recommended to run in Windows OS although it is portable to Linux or Mac OS as Unity and Python are both multi-platform portable.
 
 ### Python
-**If you want to use your own virtual environment**
-1. Create a virutal environment in this directory and enter the virtual environement following this [tutorial](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/).
+
+1. Create a virutal environment inside `./PythonAPI` and enter the virtual environement following this [tutorial](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/).
 2. Run `setup.py` to install all necessary requirements.
 3. Run `main.py`.
-
-**If you want to use the my virtual environement**
-1. Run `main.py`
 
 ## Common Questions
 
