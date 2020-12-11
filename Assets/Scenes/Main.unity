@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 2138677392}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.20749143, g: 0.21147497, b: 0.14576834, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -341,9 +341,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '07<sup>th</sup> <sub>of</sub> Dec 2020
+  m_text: '11<sup>th</sup> <sub>of</sub> Dec 2020
 
-    10:53:28'
+    06:53:51'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
   m_sharedMaterial: {fileID: -5255979842493405469, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
@@ -530,7 +530,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f57162a8011aa248a5675c0ad65fc03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  source: {fileID: 1138075566}
+  audioSource: {fileID: 1138075566}
+  audioClip: {fileID: 0}
+  fft: 4
+  sampleNum: 512
+  amplitudeMultiplier: 2
   material: {fileID: 2100000, guid: c1b7b8093337f814599cf0081d3c4c5a, type: 2}
 --- !u!82 &1138075566
 AudioSource:
