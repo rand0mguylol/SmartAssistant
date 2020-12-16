@@ -5,7 +5,6 @@ nltk
 pygame
 numpy<1.19.0
 SpeechRecognition
-gtts
 pyttsx3
 word2number
 playsound
