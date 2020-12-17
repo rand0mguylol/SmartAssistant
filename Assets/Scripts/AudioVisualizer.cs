@@ -8,19 +8,34 @@ public class AudioVisualizer : MonoBehaviour
   public AudioSource audioSource;
   public AudioClip audioClip;
   public static float[] audioSpectrum;
-
   public FFTWindow fft;
-  
   public uint sampleNum = 512;
   public float amplitudeMultiplier = 10f;
-
+  public bool isUsingMic;
+  public string micDevice;
   public Material material;
   // Start is called before the first frame update
   void Start()
   {
+    if(isUsingMic)
+    {
+      if(Microphone.devices.Length > 0)
+      {
+        //select individual microphone device
+        micDevice = Microphone.devices[0].ToString();
+        audioSource.clip = Microphone.Start(micDevice, true, 10, AudioSettings.outputSampleRate);
+      }
+    }
+
+    //song played when not using mic
+    if(!isUsingMic) 
+    {
+      audioClip = audioSource.clip;
+    }
+
+    audioSource.Play();
     // audioSource = GetComponent<AudioSource>();
-    audioClip = audioSource.clip;
-    print(audioClip.frequency);
+    // print(audioClip.frequency);
   }
 
   // Update is called once per frame
