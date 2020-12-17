@@ -1,4 +1,4 @@
-﻿using System.Collections; 
+using System.Collections; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,8 @@ public class VoiceRecon : MonoBehaviour
 
   private void OnKeyWordRecognize(PhraseRecognizedEventArgs speech)
   {
-    Debug.Log(speech.text);
+    Debug.Log("Key Word :" + speech.text);
+    keywordDict[speech.text].Invoke();
   }
 
   private void greet()
