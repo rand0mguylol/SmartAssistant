@@ -49,7 +49,7 @@ public class BGCanvas : MonoBehaviour
   {
     cpuCounter.NextValue();
     ramCounter.NextValue();
-    System.Threading.Thread.Sleep(1000);
+    // System.Threading.Thread.Sleep(1000);
     // yield return new WaitForSeconds(1);
     int cpu = (int)cpuCounter.NextValue();
     int ram = (int)ramCounter.NextValue();
@@ -58,7 +58,6 @@ public class BGCanvas : MonoBehaviour
     print(ram);
 
     performance.text = $"CPU : {cpu} %\nGPU : 0 \nRAM : {ram} %";
-    
   }
 
   void UpdateWeather()
