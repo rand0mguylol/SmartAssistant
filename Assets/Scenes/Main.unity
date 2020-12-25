@@ -334,7 +334,7 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 0.5
+      - m_Value: 0.2
         m_Name: Noise Speed
         m_Overridden: 0
       - m_Value: 0
@@ -360,6 +360,12 @@ VisualEffect:
         m_Overridden: 0
       - m_Value: {x: 0, y: -1, z: -6.5, w: 0}
         m_Name: Audio1
+        m_Overridden: 0
+      - m_Value: {x: 0, y: 0, z: 0, w: 0}
+        m_Name: Audio2
+        m_Overridden: 0
+      - m_Value: {x: 0, y: 0, z: 0, w: 0}
+        m_Name: Audio3
         m_Overridden: 0
     m_Uint:
       m_Array: []
@@ -433,70 +439,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioVFX: {fileID: 275060728}
-  drawDefaultInspect: 0
+  drawDefaultInspect: 1
   rotationMultiplier: 500
   rotationVelocity: {x: 0, y: 0}
   velocityDamping: 0.95
   intensityCoefficient: 0.1
   intervalTime: 0.01
-  showAgentInteraction: 1
+  showAgentInteraction: 0
   showRotation: 1
   showMouse: 0
   audioSource: {fileID: 275060732}
   audioClip: {fileID: 0}
-  fft: 0
-  bandLeft: []
-  bandLength: 1
-  bandDirections:
-  - {x: 0.28489557, y: 0.95855856, z: 0}
-  - {x: 0.6458978, y: 0.76342386, z: 0}
-  - {x: 0.85605264, y: 0.5168886, z: 0}
-  - {x: 0.98297864, y: 0.18371992, z: 0}
-  - {x: 0.98297864, y: -0.18371992, z: 0}
-  - {x: 0.85605264, y: -0.5168887, z: 0}
-  - {x: 0.6458978, y: -0.7634239, z: 0}
-  - {x: 0.2848956, y: -0.95855856, z: 0}
-  bandPoints:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  bandDirGrad:
-    serializedVersion: 2
-    key0: {r: 1, g: 0, b: 0, a: 1}
-    key1: {r: 1, g: 0.5203068, b: 0, a: 1}
-    key2: {r: 1, g: 0.8873908, b: 0, a: 0}
-    key3: {r: 0.041940928, g: 1, b: 0, a: 0}
-    key4: {r: 0, g: 0.96696854, b: 1, a: 0}
-    key5: {r: 0.2694702, g: 0, b: 1, a: 0}
-    key6: {r: 1, g: 0, b: 1, a: 0}
-    key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
-    ctime1: 10918
-    ctime2: 21889
-    ctime3: 32833
-    ctime4: 43777
-    ctime5: 54722
-    ctime6: 65535
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 7
-    m_NumAlphaKeys: 2
-  showAudioSettings: 1
+  fft: 4
+  showAudioSettings: 0
   showMicSettings: 0
   showAudioVisualizer: 0
+  audioProfile: 0
+  samples: 512
+  frequencyBands: 8
+  window: 4
 --- !u!82 &275060732
 AudioSource:
   m_ObjectHideFlags: 0
@@ -507,7 +468,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5e7e6e55ff9826c47bb4b55e54b83626, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0306fb2ed64a66d4cae76f44247ad8d8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -819,7 +780,19 @@ MonoBehaviour:
       m_Calls: []
   m_text: '25<sup>th</sup> <sub>of</sub> Dec 2020
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     05:42:53'
+=======
+    05:20:33'
+>>>>>>> Stashed changes
+=======
+    05:20:33'
+>>>>>>> Stashed changes
+=======
+    05:20:33'
+>>>>>>> Stashed changes
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
   m_sharedMaterial: {fileID: -5255979842493405469, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}

@@ -2,7 +2,8 @@ using UnityEngine;
 
 public partial class Agent : MonoBehaviour
 {
-  #region Rotation
+  #region Agent Interaction
+  [Header("Agent Interaction")]
   public float rotationMultiplier = 500;
   public Vector2 rotationVelocity;
   [Range(0.8f, 0.99f)]
@@ -14,6 +15,7 @@ public partial class Agent : MonoBehaviour
   #endregion
 
   #region Editor Stuffs
+  [HideInInspector]
   public bool showAgentInteraction,
   showRotation,
   showMouse;

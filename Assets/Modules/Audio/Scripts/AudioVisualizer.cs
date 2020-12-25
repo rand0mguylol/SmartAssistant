@@ -4,18 +4,18 @@ using UnityEngine.VFX;
 public partial class Agent : MonoBehaviour
 {
   #region Audio Settings
-  private const float epsilon = 0.001f;
+  [Header("Audio Settings")]
   public AudioSource audioSource;
   public AudioClip audioClip;
   public FFTWindow fft;
 
   public const int audioHertz = 44100;
-  public const int sampleSize = 512;
+  public const int sampleSize = 1024;
   public static float[] spectrumLeft;
   public static float[] spectrumRight;
 
   public const int bandSize = 8;
-  public float[] bandLeft;
+  public static float[] bandLeft;
   public static float[] bandRight;
   #endregion
 
@@ -24,31 +24,51 @@ public partial class Agent : MonoBehaviour
   #endregion
 
   #region Audio Visualizer
-  public float bandLength = 5.0f;
-  public Vector3[] bandDirections = new Vector3[bandSize];
-  public Vector3[] bandPoints = new Vector3[bandSize];
-  public Gradient bandDirGrad;
   #endregion
 
   #region Editor Stuffs
+  [HideInInspector]
   public bool showAudioSettings,
   showMicSettings,
   showAudioVisualizer;
   #endregion
-  
-  void InitAudioVisualizer()
+
+  [SerializeField] private float audioProfile = 0.0f;
+  [SerializeField] private int samples = 512;
+  [SerializeField] private int frequencyBands = 8;
+  [SerializeField] private FFTWindow window = FFTWindow.Blackman;
+
+  // cached
+  private AudioSource cached_AudioSource;
+  private float[] cached_Samples;
+  private float[] cached_FreqBands;
+  private float[] cached_FreqBandBuffer;
+  private float[] cached_FreqBufferDecrease;
+  private float[] cached_FreqBandHighest;
+  private float[] cached_AudioBand;
+  private float[] cached_AudioBandBuffer;
+
+  private float cached_Amplitude;
+  private float cached_AmplitudeBuffer;
+  private float cached_AmplitudeHighest;
+
+  public float[] Samples
   {
-    print(sampleSize);
-    spectrumLeft = new float[sampleSize];
-    spectrumRight = new float[sampleSize];
-    bandLeft = new float[bandSize];
-    bandRight = new float[bandSize];
+    get { return cached_Samples; }
+  }
 
-    micDevice = Microphone.devices[0].ToString();
+  void Awake()
+  {
+    cached_AudioSource = GetComponent<AudioSource>();
+    cached_Samples = new float[samples];
+    cached_FreqBands = new float[frequencyBands];
+    cached_FreqBandBuffer = new float[frequencyBands];
+    cached_FreqBufferDecrease = new float[frequencyBands];
+    cached_FreqBandHighest = new float[frequencyBands];
+    cached_AudioBand = new float[frequencyBands];
+    cached_AudioBandBuffer = new float[frequencyBands];
 
-    audioSource.Play();
-    SetVFXAudioForcePositions();
-    SetBandPoints();
+    print(SystemInfo.maxComputeWorkGroupSizeX);
   }
 
   void UpdateAudioVisualizer()
@@ -58,7 +78,145 @@ public partial class Agent : MonoBehaviour
 
     CreateFreqBand(ref bandLeft, ref spectrumLeft);
     CreateFreqBand(ref bandRight, ref spectrumRight);
-    UpdateVFXAudioForcePositions();
+
+    GenerateFrequencyBands();
+    GenerateAudioBands();
+    GenerateAmplitude();
+  }
+
+  public float GetAmplitude()
+  {
+    return cached_Amplitude;
+  }
+
+  public float GetAmplitudeBuffer()
+  {
+    return cached_AmplitudeBuffer;
+  }
+
+  public float GetFrequencyBand(int i)
+  {
+    return cached_FreqBands[i];
+  }
+
+  public float GetFrequencyBandBuffer(int i)
+  {
+    return cached_FreqBandBuffer[i];
+  }
+
+  public float GetAudioBand(int i)
+  {
+    return cached_AudioBand[i];
+  }
+
+  public float GetAudioBandBuffer(int i)
+  {
+    return cached_AudioBandBuffer[i];
+  }
+
+  private void InitializeAudioProfile(float value)
+  {
+    for (int i = 0; i < cached_FreqBandHighest.Length; ++i)
+    {
+      cached_FreqBandHighest[i] = value;
+    }
+  }
+
+  private void GenerateAmplitude()
+  {
+    cached_Amplitude = 0.0f;
+    cached_AmplitudeBuffer = 0.0f;
+
+    int length = Mathf.Min(cached_AudioBand.Length, cached_AudioBandBuffer.Length);
+    for (int i = 0; i < length; ++i)
+    {
+      cached_Amplitude += cached_AudioBand[i];
+      cached_AmplitudeBuffer += cached_AudioBandBuffer[i];
+    }
+
+    if (cached_Amplitude > cached_AmplitudeHighest)
+    {
+      cached_AmplitudeHighest = cached_Amplitude;
+    }
+    cached_Amplitude /= cached_AmplitudeHighest;
+    cached_AmplitudeBuffer /= cached_AmplitudeHighest;
+  }
+
+  private void GenerateAudioBands()
+  {
+    for (int i = 0; i < cached_FreqBands.Length; ++i)
+    {
+      if (cached_FreqBands[i] > cached_FreqBandHighest[i])
+      {
+        cached_FreqBandHighest[i] = cached_FreqBands[i];
+      }
+      cached_AudioBand[i] = cached_FreqBands[i] / cached_FreqBandHighest[i];
+      cached_AudioBandBuffer[i] = cached_FreqBandBuffer[i] / cached_FreqBandHighest[i];
+    }
+  }
+
+  private void GenerateFrequencyBands()
+  {
+    // 44100 / 1024 = 43Hz per sample
+    // 20 - 60
+    // 60 - 250
+    // 250 - 500
+    // 500 - 2000
+    // 2000 - 4000
+    // 4000 - 6000
+    // 6000 - 20000
+
+    cached_AudioSource.GetSpectrumData(cached_Samples, 0, FFTWindow.Blackman);
+
+    int count = 0;
+    for (int i = 0; i < frequencyBands; ++i)
+    {
+      int sampleCount = (int)Mathf.Pow(2, i) * 2;
+      if (i == 7) sampleCount += 2;
+
+      float average = 0.0f;
+      for (int j = 0; j < sampleCount; ++j)
+      {
+        average += cached_Samples[count] * (count + 1);
+        ++count;
+      }
+      average /= count;
+      cached_FreqBands[i] = average;
+    }
+
+    ModulateFrequencyBands();
+  }
+
+  private void ModulateFrequencyBands()
+  {
+    for (int i = 0; i < cached_FreqBandBuffer.Length; ++i)
+    {
+      if (cached_FreqBands[i] > cached_FreqBandBuffer[i])
+      {
+        cached_FreqBandBuffer[i] = cached_FreqBands[i];
+        cached_FreqBufferDecrease[i] = 0.005f;
+      }
+
+      if (cached_FreqBands[i] < cached_FreqBandBuffer[i])
+      {
+        cached_FreqBandBuffer[i] -= cached_FreqBufferDecrease[i];
+        cached_FreqBufferDecrease[i] *= 1.2f;
+      }
+    }
+  }
+  
+  void InitAudioVisualizer()
+  {
+    spectrumLeft = new float[sampleSize];
+    spectrumRight = new float[sampleSize];
+    bandLeft = new float[bandSize];
+    bandRight = new float[bandSize];
+
+    micDevice = Microphone.devices[0].ToString();
+
+    audioSource.Play();
+
+    InitializeAudioProfile(audioProfile);
   }
 
   void CreateFreqBand(ref float[] band, ref float[] spectrum)
@@ -82,60 +240,12 @@ public partial class Agent : MonoBehaviour
     }
   }
 
-  public void SetBandPoints()
-  {
-    for (int b=0; b < bandSize; b++) bandPoints[b] = transform.position + bandDirections[b]*bandLength;
-  }
-
-  void SetVFXAudioForcePositions()
-  {
-    audioVFX.SetVector4(audio1, bandPoints[0]);
-    audioVFX.SetVector4(audio2, bandPoints[1]);
-    audioVFX.SetVector4(audio3, bandPoints[2]);
-    audioVFX.SetVector4(audio4, bandPoints[3]);
-    audioVFX.SetVector4(audio5, bandPoints[4]);
-    audioVFX.SetVector4(audio6, bandPoints[5]);
-    audioVFX.SetVector4(audio7, bandPoints[6]);
-    audioVFX.SetVector4(audio8, bandPoints[7]);
-  }
-
-  void UpdateVFXAudioForcePositions()
-  {
-    audioVFX.SetVector4(audio1, SetForce(bandPoints[0], ref bandLeft[0]));
-    audioVFX.SetVector4(audio2, SetForce(bandPoints[1], ref bandLeft[1]));
-    audioVFX.SetVector4(audio3, SetForce(bandPoints[2], ref bandLeft[2]));
-    audioVFX.SetVector4(audio4, SetForce(bandPoints[3], ref bandLeft[3]));
-    audioVFX.SetVector4(audio5, SetForce(bandPoints[4], ref bandLeft[4]));
-    audioVFX.SetVector4(audio6, SetForce(bandPoints[5], ref bandLeft[5]));
-    audioVFX.SetVector4(audio7, SetForce(bandPoints[6], ref bandLeft[6]));
-    audioVFX.SetVector4(audio8, SetForce(bandPoints[7], ref bandLeft[7]));
-  }
-
   Vector4 SetForce(Vector3 position, ref float force)
   {
-    return new Vector4(position.x, position.y, position.z, Mathf.Clamp(force, 0, 1));
+    return new Vector4(position.x, position.y, position.z, Mathf.Clamp(force, 0, 1.0f));
   }
 
   void OnDrawGizmos()
   {
-    for (int b=0; b < bandSize; b++)
-    {
-      Gizmos.color = bandDirGrad.Evaluate(b/(float) bandSize);
-      Gizmos.DrawLine(transform.position, transform.position + bandDirections[b]*bandLength);
-      Gizmos.DrawSphere(transform.position + bandDirections[b]*bandLength, 0.01f);
-    }
-
-    for (int b=0; b < bandSize; b++)
-    {
-      Gizmos.color = bandDirGrad.Evaluate(b/(float) bandSize);
-      Gizmos.DrawLine(transform.position, transform.position + new Vector3(
-        -bandDirections[b].x*bandLength,
-        bandDirections[b].y*bandLength,
-        bandDirections[b].z*bandLength));
-      Gizmos.DrawSphere(transform.position + new Vector3(
-        -bandDirections[b].x*bandLength,
-        bandDirections[b].y*bandLength,
-        bandDirections[b].z*bandLength), 0.01f);
-    }
   }
 }
