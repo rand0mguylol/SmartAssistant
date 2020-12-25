@@ -6,6 +6,7 @@ using UnityEngine.VFX;
 public partial class Agent : MonoBehaviour
 {
   public VisualEffect audioVFX;
+  private const float epsilon = 0.001f;
   
   #region VFX Property IDs
   private int audio1,
@@ -20,6 +21,7 @@ public partial class Agent : MonoBehaviour
   #endregion
 
   #region Editor Stuff
+  [HideInInspector]
   public bool drawDefaultInspect;
   #endregion
 

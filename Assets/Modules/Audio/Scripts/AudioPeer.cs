@@ -1,38 +1,10 @@
-﻿using UnityEngine;
-using UnityEngine.VFX;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public partial class Agent : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class AudioPeer : MonoBehaviour
 {
-  #region Audio Settings
-  [Header("Audio Settings")]
-  public AudioSource audioSource;
-  public AudioClip audioClip;
-  public FFTWindow fft;
-
-  public const int audioHertz = 44100;
-  public const int sampleSize = 1024;
-  public static float[] spectrumLeft;
-  public static float[] spectrumRight;
-
-  public const int bandSize = 8;
-  public static float[] bandLeft;
-  public static float[] bandRight;
-  #endregion
-
-  #region Mic Settings
-  public static string micDevice;
-  #endregion
-
-  #region Audio Visualizer
-  #endregion
-
-  #region Editor Stuffs
-  [HideInInspector]
-  public bool showAudioSettings,
-  showMicSettings,
-  showAudioVisualizer;
-  #endregion
-
   [SerializeField] private float audioProfile = 0.0f;
   [SerializeField] private int samples = 512;
   [SerializeField] private int frequencyBands = 8;
@@ -67,18 +39,15 @@ public partial class Agent : MonoBehaviour
     cached_FreqBandHighest = new float[frequencyBands];
     cached_AudioBand = new float[frequencyBands];
     cached_AudioBandBuffer = new float[frequencyBands];
-
-    print(SystemInfo.maxComputeWorkGroupSizeX);
   }
 
-  void UpdateAudioVisualizer()
+  void Start()
   {
-    audioSource.GetSpectrumData(spectrumLeft, 0, fft);
-    audioSource.GetSpectrumData(spectrumRight, 1, fft);
+    InitialiseAudioProfile(audioProfile);
+  }
 
-    CreateFreqBand(ref bandLeft, ref spectrumLeft);
-    CreateFreqBand(ref bandRight, ref spectrumRight);
-
+  void Update()
+  {
     GenerateFrequencyBands();
     GenerateAudioBands();
     GenerateAmplitude();
@@ -114,7 +83,7 @@ public partial class Agent : MonoBehaviour
     return cached_AudioBandBuffer[i];
   }
 
-  private void InitializeAudioProfile(float value)
+  private void InitialiseAudioProfile(float value)
   {
     for (int i = 0; i < cached_FreqBandHighest.Length; ++i)
     {
@@ -204,48 +173,6 @@ public partial class Agent : MonoBehaviour
       }
     }
   }
-  
-  void InitAudioVisualizer()
-  {
-    spectrumLeft = new float[sampleSize];
-    spectrumRight = new float[sampleSize];
-    bandLeft = new float[bandSize];
-    bandRight = new float[bandSize];
 
-    micDevice = Microphone.devices[0].ToString();
 
-    audioSource.Play();
-
-    InitializeAudioProfile(audioProfile);
-  }
-
-  void CreateFreqBand(ref float[] band, ref float[] spectrum)
-  {
-    int count = 0;
-
-    for (int i=0; i < bandSize; i++)
-    {
-      int sampleCount = (int) Mathf.Pow(2, i) * 2;
-      if (i == 7) sampleCount += 2;
-
-      float average = 0;
-      for (int s=0; s < sampleCount; s++)
-      {
-        average += spectrum[count]*(count + 1);
-        count ++;
-      }
-
-      average /= count;
-      band[i] = average * 10;
-    }
-  }
-
-  Vector4 SetForce(Vector3 position, ref float force)
-  {
-    return new Vector4(position.x, position.y, position.z, Mathf.Clamp(force, 0, 1.0f));
-  }
-
-  void OnDrawGizmos()
-  {
-  }
 }
