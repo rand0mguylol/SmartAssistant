@@ -215,6 +215,9 @@ VisualEffect:
       - m_Value: 0.2
         m_Name: SpawnParticles
         m_Overridden: 0
+      - m_Value: 100
+        m_Name: DragCoefficient
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
@@ -328,7 +331,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 5e7e6e55ff9826c47bb4b55e54b83626, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0306fb2ed64a66d4cae76f44247ad8d8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -523,12 +526,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 494107438}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f2bf512c63d3c34baf3e6af47792ba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   datetimeText: {fileID: 1080077249}
+  performance: {fileID: 0}
+  temperature: {fileID: 0}
 --- !u!1 &653260035
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,7 +641,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: '25<sup>th</sup> <sub>of</sub> Dec 2020
 
-    08:11:41'
+    08:21:33'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
   m_sharedMaterial: {fileID: -5255979842493405469, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
