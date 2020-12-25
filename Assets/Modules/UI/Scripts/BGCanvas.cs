@@ -1,14 +1,15 @@
 ﻿using TMPro;
 using System;
 using System.Diagnostics;
-using System.Collections;
 using UnityEngine;
+
+using System.Collections;
 
 [ExecuteInEditMode]
 public class BGCanvas : MonoBehaviour
 {
   // refering to resource monitor of computer **WinOs only**
-  PerformanceCounter cpuCounter =new PerformanceCounter("Processor", "% Processor Time", "_Total");
+  PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
   PerformanceCounter ramCounter = new PerformanceCounter("Memory", "Available MBytes");
   public TextMeshProUGUI datetimeText;
   public TextMeshProUGUI performance;
@@ -29,7 +30,6 @@ public class BGCanvas : MonoBehaviour
   void Update()
   {
     UpdateDateTime();
-    UpdatePerformance();
   }
 
   void UpdateDateTime()
@@ -47,10 +47,18 @@ public class BGCanvas : MonoBehaviour
 
   void UpdatePerformance()
   {
+    cpuCounter.NextValue();
+    ramCounter.NextValue();
+    System.Threading.Thread.Sleep(1000);
+    // yield return new WaitForSeconds(1);
     int cpu = (int)cpuCounter.NextValue();
     int ram = (int)ramCounter.NextValue();
 
+    print(cpu);
+    print(ram);
+
     performance.text = $"CPU : {cpu} %\nGPU : 0 \nRAM : {ram} %";
+    
   }
 
   void UpdateWeather()
