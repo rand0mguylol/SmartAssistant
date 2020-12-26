@@ -48,3 +48,9 @@ This project uses Unity (specifically the Universal Render Pipeline) as the GUI 
 ## Credits
 
 - **Part of Code Structure**: [Jasper Project](https://github.com/jasperproject)
+
+## License
+
+Smart Assistant as a whole is licensed under the GNU Public License, Version 3. Individual files may have a different, but compatible license.
+
+See [License File](./LICENSE.md) for details.
