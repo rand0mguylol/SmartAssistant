@@ -11,7 +11,9 @@ public partial class Agent : MonoBehaviour
 
   public const int audioHertz = 44100;
   public const int samples = 1024;
-  public const float audioProfile = 0.0f;
+  [Range(0.0f, 1.0f)]
+  public float audioProfile = 0.1f;
+  public float silenceTime = 0.0f;
 
   public const int frequencyBands = 8;
 
@@ -30,6 +32,7 @@ public partial class Agent : MonoBehaviour
 
   #region Mic Settings
   public static string micDevice;
+  public bool useMic;
   #endregion
 
   #region Audio Visualizer
@@ -48,6 +51,7 @@ public partial class Agent : MonoBehaviour
 
   void InitAudioVisualizer()
   {
+    // Initialize audio visualizer
     cached_Samples = new float[samples];
     cached_FreqBands = new float[frequencyBands];
     cached_FreqBandBuffer = new float[frequencyBands];
@@ -55,12 +59,26 @@ public partial class Agent : MonoBehaviour
     cached_FreqBandHighest = new float[frequencyBands];
     cached_AudioBand = new float[frequencyBands];
     cached_AudioBandBuffer = new float[frequencyBands];
-    InitializeAudioProfile(audioProfile);
+    InitializeAudioProfile(ref audioProfile);
 
+    // Initialize vfx variables
     noisePosition = 0.0f;
     defaultRadius = audioVFX.GetFloat(radius);
 
-    micDevice = Microphone.devices[0].ToString();
+    // Initialize Microphone
+    if (Microphone.devices.Length > 0)
+    {
+      micDevice = Microphone.devices[1].ToString();
+    }
+
+    if (useMic)
+    {
+      print(AudioSettings.outputSampleRate);
+      if (micDevice != null) audioSource.clip = Microphone.Start(micDevice, true, 10, AudioSettings.outputSampleRate);
+    } else
+    {
+      audioSource.clip = audioClip;
+    }
     audioSource.Play();
   }
 
@@ -70,17 +88,31 @@ public partial class Agent : MonoBehaviour
     GenerateAudioBands();
     GenerateAmplitude();
 
-    noisePosition += cached_Amplitude * 0.1f;
-    audioVFX.SetFloat(noisePositionAddition, noisePosition);
-    audioVFX.SetFloat(noiseIntensity, cached_Amplitude + cached_AudioBand[0]);
-    audioVFX.SetFloat(radius, defaultRadius + Mathf.Lerp(0.0f, radiusIncrement, cached_AudioBand[0]));
+    if (cached_Amplitude > audioProfile)
+    {
+      silenceTime = 0.0f;
+      noisePosition += cached_AudioBand[frequencyBands-1] * 0.1f;
+      audioVFX.SetFloat(noisePositionAddition, noisePosition);
+      audioVFX.SetFloat(noiseIntensity, cached_Amplitude + cached_AudioBand[0]);
+      if (!useMic) audioVFX.SetFloat(radius, defaultRadius + Mathf.Lerp(0.0f, radiusIncrement, cached_AudioBand[0]));
+    } else
+    {
+      silenceTime += Time.deltaTime;
+      if (silenceTime > 2.0f)
+      {
+        silenceTime = 0.0f;
+        InitializeAudioProfile(ref audioProfile);
+      }
+    }
   }
 
-  private void InitializeAudioProfile(float value)
+  private void InitializeAudioProfile(ref float value)
   {
     for (int i = 0; i < cached_FreqBandHighest.Length; ++i)
     {
       cached_FreqBandHighest[i] = value;
+      cached_FreqBands[i] = 0.01f;
+      cached_FreqBandBuffer[i] = 0.01f;
     }
   }
 
@@ -111,6 +143,7 @@ public partial class Agent : MonoBehaviour
       if (cached_FreqBands[i] > cached_FreqBandHighest[i])
       {
         cached_FreqBandHighest[i] = cached_FreqBands[i];
+        print(cached_FreqBandHighest[i]);
       }
       cached_AudioBand[i] = cached_FreqBands[i] / cached_FreqBandHighest[i];
       cached_AudioBandBuffer[i] = cached_FreqBandBuffer[i] / cached_FreqBandHighest[i];

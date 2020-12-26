@@ -452,8 +452,11 @@ MonoBehaviour:
   showRotation: 1
   showMouse: 0
   audioSource: {fileID: 275060732}
-  audioClip: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: 5e7e6e55ff9826c47bb4b55e54b83626, type: 3}
   window: 4
+  audioProfile: 0.4
+  silenceTime: 0
+  useMic: 1
   radiusIncrement: 0.2
   showAudioSettings: 1
   showMicSettings: 0
@@ -468,11 +471,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0306fb2ed64a66d4cae76f44247ad8d8, type: 3}
+  m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -912,9 +915,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '25<sup>th</sup> <sub>of</sub> Dec 2020
+  m_text: '26<sup>th</sup> <sub>of</sub> Dec 2020
 
-    10:51:22'
+    07:00:07'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
   m_sharedMaterial: {fileID: -5255979842493405469, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
