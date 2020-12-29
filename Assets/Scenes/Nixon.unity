@@ -947,12 +947,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '29<sup>th</sup> <sub>of</sub> Dec 2020
+  m_text: '29<sup>th</sup> <sub>of</sub> DEC 2020
 
-    04:50:15'
+    07:05:51'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
-  m_sharedMaterial: {fileID: -5255979842493405469, guid: 9ca158c55a6bde6438e4ef7899dc7e72, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 99125c7ef75b58246b18d4695f0a4c66, type: 2}
+  m_sharedMaterial: {fileID: 621485712877075779, guid: 99125c7ef75b58246b18d4695f0a4c66, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -976,8 +976,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.5
-  m_fontSizeBase: 0.5
+  m_fontSize: 0.4
+  m_fontSizeBase: 0.4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
