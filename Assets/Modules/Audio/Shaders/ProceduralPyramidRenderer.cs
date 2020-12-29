@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class ProceduralPyramidRendererFinal : MonoBehaviour {
+public class ProceduralPyramidRenderer : MonoBehaviour {
 
   [Tooltip("A mesh to extrude the pyramids from")]
   [SerializeField] private Mesh sourceMesh = default;
